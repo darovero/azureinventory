@@ -36,16 +36,25 @@ steps:
     scriptType: 'ps'
 
 
+# - task: AzurePowerShell@5
+#   displayName: 'Upload Inventory to Azure Blob Storage'
+#   inputs:
+#     azureSubscription: $(azureSubscription)
+#     ScriptType: 'InlineScript'
+#     Inline: |
+#       $sourceFilePath = 'Resources_${{parameters.resourcegroup}}.csv'
+#       $destinationBlobName = '${{parameters.ContainerFolder}}/Resources_${{parameters.resourcegroup}}.csv'
+      
+#       $storageContext = New-AzStorageContext -StorageAccountName $(storageAccountName) -StorageAccountKey $(storageAccountAccessKey)
+#       $blob = Set-AzStorageBlobContent -Context $storageContext -Container $(storageContainerName) -File $sourceFilePath -Blob $destinationBlobName -Force
+
+#     azurePowerShellVersion: LatestVersion
+
 - task: AzurePowerShell@5
   displayName: 'Upload Inventory to Azure Blob Storage'
   inputs:
     azureSubscription: $(azureSubscription)
-    ScriptType: 'InlineScript'
-    Inline: |
-      $sourceFilePath = 'Resources_${{parameters.resourcegroup}}.csv'
-      $destinationBlobName = '${{parameters.ContainerFolder}}/Resources_${{parameters.resourcegroup}}.csv'
-      
-      $storageContext = New-AzStorageContext -StorageAccountName $(storageAccountName) -StorageAccountKey $(storageAccountAccessKey)
-      $blob = Set-AzStorageBlobContent -Context $storageContext -Container $(storageContainerName) -File $sourceFilePath -Blob $destinationBlobName -Force
-
+    ScriptPath: '$(Build.SourcesDirectory)/Scripts/upload_to_blob.ps1'
+    ScriptArguments: '-resourceGroup "${{parameters.resourcegroup}}" -containerName "$(storageContainerName)" -blobName "$(parameters.ContainerFolder)/Resources_${{parameters.resourcegroup}}.csv" -storageAccountName "$(storageAccountName)" -storageAccountKey "$(storageAccountAccessKey)"'
     azurePowerShellVersion: LatestVersion
+
