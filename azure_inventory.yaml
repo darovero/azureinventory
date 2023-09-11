@@ -23,11 +23,7 @@ variables:
   - group: ${{ parameters.environment }}
 
 steps:
-- task: UseDotNet@2
-  displayName: 'Install Azure PowerShell module'
-  inputs:
-    packageType: 'sdk'
-    installationPath: $(Agent.ToolsDirectory)/dotnet
+- template: Modules/azurepowershell.yaml
 
 - task: AzureCLI@2
   displayName: 'Generating RG Inventory'
