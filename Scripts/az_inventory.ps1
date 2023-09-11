@@ -1,9 +1,10 @@
 # Define Resource Group
 $RGtoEval = $env:resourcegroup
+$TagsToFilter = $env:tagsToFilter
 
 # Function to discover resources within the Resource Group
 function resourcegroup_discover {
-    $selectedTags = "${{parameters.tagsToFilter}}" -split ','
+    $selectedTags = "$TagsToFilter" -split ','
 
     $resources = az resource list --resource-group $RGtoEval --query '[].{Name:name, ResourceType:type, ResourceGroupName:resourceGroup, Location:location, Tags:tags}' --output json | ConvertFrom-Json
 
@@ -36,4 +37,4 @@ function resourcegroup_discover {
 }
 
 $exportData = resourcegroup_discover
-$exportData | Export-Csv "Resources_${{parameters.resourcegroup}}.csv" -NoTypeInformation
+$exportData | Export-Csv "Resources_$RGtoEval.csv" -NoTypeInformation
