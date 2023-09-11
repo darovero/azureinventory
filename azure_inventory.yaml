@@ -18,6 +18,8 @@ parameters:
   displayName: 'Tags to Filter'
   type: string
   default: 'owner,deploymentid'
+- name: ContainerFolder
+  default: "Inventory"
 
 variables:
   - group: ${{ parameters.environment }}
@@ -39,7 +41,7 @@ steps:
     ScriptType: 'InlineScript'
     Inline: |
       $sourceFilePath = 'Resources_${{parameters.resourcegroup}}.csv'
-      $destinationBlobName = 'Inventory/Resources_${{parameters.resourcegroup}}.csv'
+      $destinationBlobName = '${{parameters.ContainerFolder}}/Resources_${{parameters.resourcegroup}}.csv'
       
       $storageContext = New-AzStorageContext -StorageAccountName $(storageAccountName) -StorageAccountKey $(storageAccountAccessKey)
       $blob = Set-AzStorageBlobContent -Context $storageContext -Container $(storageContainerName) -File $sourceFilePath -Blob $destinationBlobName -Force
