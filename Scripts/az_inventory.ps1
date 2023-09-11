@@ -1,40 +1,41 @@
-# Function to discover resources within the Resource Group
-param (
-    [string]$ResourceGroup,
-    [string]$TagsToFilter
+param(
+    [string]$resourceGroup,
+    [string]$tagsToFilter,
+    [string]$outputFilePath
 )
 
-$selectedTags = $TagsToFilter -split ','
+# Convertir la cadena de tags a una lista de tags
+$selectedTags = $tagsToFilter -split ','
 
-$resources = az resource list --resource-group $ResourceGroup --query '[].{Name:name, ResourceType:type, ResourceGroupName:resourceGroup, Location:location, Tags:tags}' --output json | ConvertFrom-Json
-    
-    $tagRows = @()
+# Obtener la lista de recursos en el grupo de recursos
+$resources = az resource list --resource-group $resourceGroup --query '[].{Name:name, ResourceType:type, ResourceGroupName:resourceGroup, Location:location, Tags:tags}' --output json | ConvertFrom-Json
 
-    foreach ($resource in $resources) {
-        $tagRow = [PSCustomObject]@{
-            Name            = $resource.Name
-            ResourceType    = $resource.ResourceType
-            ResourceGroupName = $resource.ResourceGroupName
-            Location        = $resource.Location
-        }
+# Crear una lista para almacenar los resultados
+$tagRows = @()
 
-        $resourceTags = $resource.Tags
-        if ($resourceTags) {
-            foreach ($tagName in $selectedTags) {
-                $tagValue = $resourceTags.$tagName
-                $tagRow | Add-Member -MemberType NoteProperty -Name $tagName -Value $tagValue
-            }
-        } else {
-            foreach ($tagName in $selectedTags) {
-                $tagRow | Add-Member -MemberType NoteProperty -Name $tagName -Value ""
-            }
-        }
-
-        $tagRows += $tagRow
+foreach ($resource in $resources) {
+    $tagRow = [PSCustomObject]@{
+        Name            = $resource.Name
+        ResourceType    = $resource.ResourceType
+        ResourceGroupName = $resource.ResourceGroupName
+        Location        = $resource.Location
     }
 
-    $tagRows
+    $resourceTags = $resource.Tags
+
+    if ($resourceTags) {
+        foreach ($tagName in $selectedTags) {
+            $tagValue = $resourceTags.$tagName
+            $tagRow | Add-Member -MemberType NoteProperty -Name $tagName -Value $tagValue
+        }
+    } else {
+        foreach ($tagName in $selectedTags) {
+            $tagRow | Add-Member -MemberType NoteProperty -Name $tagName -Value ""
+        }
+    }
+
+    $tagRows += $tagRow
 }
 
-$exportData = resourcegroup_discover -ResourceGroup $ResourceGroup -TagsToFilter $TagsToFilter
-$exportData | Export-Csv "Resources_$ResourceGroup.csv" -NoTypeInformation
+# Exportar los resultados a un archivo CSV
+$tagRows | Export-Csv $outputFilePath -NoTypeInformation
