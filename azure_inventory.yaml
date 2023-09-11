@@ -32,7 +32,7 @@ steps:
   inputs:
     azureSubscription: $(azureSubscription)
     scriptPath: '$(Build.SourcesDirectory)/Scripts/az_inventory.ps1'
-    scriptArguments: '--resourceGroup "${{parameters.resourcegroup}}" --tagsToFilter "${{parameters.tagsToFilter}}" --outputFilePath "Resources_${{parameters.resourcegroup}}.csv"'
+    scriptArguments: '-resourceGroup "${{parameters.resourcegroup}}" -tagsToFilter "${{parameters.tagsToFilter}}" -outputFilePath "Resources_${{parameters.resourcegroup}}.csv"'
     scriptType: 'ps'
 
 
