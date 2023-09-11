@@ -7,7 +7,7 @@ function resourcegroup_discover {
     $selectedTags = "$TagsToFilter" -split ','
 
     $resources = az resource list --resource-group $RGtoEval --query '[].{Name:name, ResourceType:type, ResourceGroupName:resourceGroup, Location:location, Tags:tags}' --output json | ConvertFrom-Json
-
+    
     $tagRows = @()
 
     foreach ($resource in $resources) {
