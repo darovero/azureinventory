@@ -28,7 +28,7 @@ steps:
 - template: Modules/azurepowershell.yaml
 
 - script: |
-    powershell -File '$(Build.SourcesDirectory)/Scripts/azure_inventory.ps1' -ResourceGroup $(resourceGroup) -TagsToFilter $(tagsToFilter)
+    powershell -File '$(Build.SourcesDirectory)/Scripts/az_inventory.ps1' -ResourceGroup $(resourceGroup) -TagsToFilter $(tagsToFilter)
   displayName: 'Run PowerShell Script'
 
 
