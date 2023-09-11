@@ -24,33 +24,25 @@ parameters:
 variables:
   - group: ${{ parameters.environment }}
 
-steps:
-- template: Modules/azurepowershell.yaml
+jobs:
+- job: RunPowerShellScript
+  steps:
+  - task: UseDotNet@2
+    inputs:
+      packageType: 'runtime'
+      version: 'latest'
+      installationPath: $(Agent.ToolsDirectory)/dotnet
 
-- script: |
-        # Instala PowerShell 7 desde PowerShellGet
-        Install-Module -Name PowerShellGet -Force -AllowClobber -Scope CurrentUser
-        Install-Package -Name powershell -Force -AllowClobber -Scope CurrentUser -Repository PSGallery
+  - powershell: |
+      # Instala PowerShell 7 desde PowerShellGet
+      Install-Module -Name PowerShellGet -Force -AllowClobber -Scope CurrentUser
+      Install-Package -Name powershell -Force -AllowClobber -Scope CurrentUser -Repository PSGallery
 
-        # Verifica la versión instalada
-        $PSVersionTable.PSVersion
-  displayName: 'Install Latest PowerShell'
-  
-- script: |
-    powershell -File '$(Build.SourcesDirectory)/Scripts/az_inventory.ps1' -ResourceGroup $(resourceGroup) -TagsToFilter $(tagsToFilter)
-  displayName: 'Run PowerShell Script'
+      # Verifica la versión instalada
+      $PSVersionTable.PSVersion
+    displayName: 'Install Latest PowerShell'
 
-
-- task: AzurePowerShell@5
-  displayName: 'Upload Inventory to Azure Blob Storage'
-  inputs:
-    azureSubscription: $(azureSubscription)
-    ScriptType: 'InlineScript'
-    Inline: |
-      $sourceFilePath = 'Resources_${{parameters.resourcegroup}}.csv'
-      $destinationBlobName = '${{parameters.ContainerFolder}}/Resources_${{parameters.resourcegroup}}.csv'
-      
-      $storageContext = New-AzStorageContext -StorageAccountName $(storageAccountName) -StorageAccountKey $(storageAccountAccessKey)
-      $blob = Set-AzStorageBlobContent -Context $storageContext -Container $(storageContainerName) -File $sourceFilePath -Blob $destinationBlobName -Force
-
-    azurePowerShellVersion: LatestVersion
+  - powershell: |
+      # Ejecuta tu script PowerShell con argumentos
+      .\Scripts\az_inventory.ps1 -ResourceGroup ${{ parameters.resourcegroup }} -TagsToFilter ${{ parameters.tagsToFilter }}
+    displayName: 'Run PowerShell Script with Arguments'
