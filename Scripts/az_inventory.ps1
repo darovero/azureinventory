@@ -1,7 +1,9 @@
 # Define Resource Group
-$RGtoEval = $env:resourcegroup
+$ResourceGroup = $env:resourcegroup
 $TagsToFilter = $env:tagsToFilter
 
+$ResourceGroup
+$TagsToFilter
 # Function to discover resources within the Resource Group
 function resourcegroup_discover {
     param (
@@ -41,5 +43,5 @@ function resourcegroup_discover {
     $tagRows
 }
 
-$exportData = resourcegroup_discover -ResourceGroup $RGtoEval -TagsToFilter $TagsToFilter
-$exportData | Export-Csv "Resources_$RGtoEval.csv" -NoTypeInformation
+$exportData = resourcegroup_discover -ResourceGroup $ResourceGroup -TagsToFilter $TagsToFilter
+$exportData | Export-Csv "Resources_$ResourceGroup.csv" -NoTypeInformation
