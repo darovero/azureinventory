@@ -1,5 +1,5 @@
 # Define Resource Group
-$RGtoEval = devk8slab01
+$RGtoEval = $env:resourcegroup
 $TagsToFilter = $env:tagsToFilter
 
 # Function to discover resources within the Resource Group
