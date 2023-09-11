@@ -28,6 +28,8 @@ steps:
 - template: Modules/azurepowershell.yaml
 
 - script: |
+    Install-Module -Name PowerShellGet -Force -AllowClobber -Scope CurrentUser
+    Install-Package -Name powershell -Force -AllowClobber -Scope CurrentUser -Repository PSGallery
     powershell -File '$(Build.SourcesDirectory)/Scripts/az_inventory.ps1' -ResourceGroup $(resourceGroup) -TagsToFilter $(tagsToFilter)
   displayName: 'Run PowerShell Script'
 
