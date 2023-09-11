@@ -1,5 +1,5 @@
 # Define Resource Group
-$RGtoEval = "${{parameters.resourcegroup}}"
+$RGtoEval = $env:resourcegroup
 
 # Function to discover resources within the Resource Group
 function resourcegroup_discover {
