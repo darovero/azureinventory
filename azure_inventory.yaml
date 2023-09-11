@@ -55,6 +55,6 @@ steps:
   inputs:
     azureSubscription: $(azureSubscription)
     ScriptPath: '$(Build.SourcesDirectory)/Scripts/upload_to_blob.ps1'
-    ScriptArguments: '-resourceGroup "${{parameters.resourcegroup}}" -containerName "$(storageContainerName)" -blobName "$(parameters.ContainerFolder)/Resources_${{parameters.resourcegroup}}.csv" -storageAccountName "$(storageAccountName)" -storageAccountKey "$(storageAccountAccessKey)"'
+    ScriptArguments: '-resourceGroup "${{parameters.resourcegroup}}" -containerName "$(storageContainerName)" -blobName "${{parameters.ContainerFolder}}/Resources_${{parameters.resourcegroup}}.csv" -storageAccountName "$(storageAccountName)" -storageAccountKey "$(storageAccountAccessKey)"'
     azurePowerShellVersion: LatestVersion
 
