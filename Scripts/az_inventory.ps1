@@ -1,19 +1,12 @@
-# Define Resource Group
-$ResourceGroup = $env:resourcegroup
-$TagsToFilter = $env:tagsToFilter
-
-$ResourceGroup
-$TagsToFilter
 # Function to discover resources within the Resource Group
-function resourcegroup_discover {
-    param (
-        [string]$ResourceGroup,
-        [string]$TagsToFilter
-    )
+param (
+    [string]$ResourceGroup,
+    [string]$TagsToFilter
+)
 
-    $selectedTags = $TagsToFilter -split ','
+$selectedTags = $TagsToFilter -split ','
 
-    $resources = az resource list --resource-group $ResourceGroup --query '[].{Name:name, ResourceType:type, ResourceGroupName:resourceGroup, Location:location, Tags:tags}' --output json | ConvertFrom-Json
+$resources = az resource list --resource-group $ResourceGroup --query '[].{Name:name, ResourceType:type, ResourceGroupName:resourceGroup, Location:location, Tags:tags}' --output json | ConvertFrom-Json
     
     $tagRows = @()
 
