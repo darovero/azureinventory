@@ -4,6 +4,11 @@ param(
     [string]$outputFilePath
 )
 
+Write-Host "resourceGroup: $resourceGroup"
+Write-Host "tagsToFilter: $tagsToFilter"
+Write-Host "outputFilePath: $outputFilePath"
+
+
 # Convertir la cadena de tags a una lista de tags
 $selectedTags = $tagsToFilter -split ','
 
