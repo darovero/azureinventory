@@ -35,21 +35,6 @@ steps:
     scriptArguments: '-resourceGroup "${{parameters.resourcegroup}}" -tagsToFilter "${{parameters.tagsToFilter}}" -outputFilePath "Resources_${{parameters.resourcegroup}}.csv"'
     scriptType: 'ps'
 
-
-# - task: AzurePowerShell@5
-#   displayName: 'Upload Inventory to Azure Blob Storage'
-#   inputs:
-#     azureSubscription: $(azureSubscription)
-#     ScriptType: 'InlineScript'
-#     Inline: |
-#       $sourceFilePath = 'Resources_${{parameters.resourcegroup}}.csv'
-#       $destinationBlobName = '${{parameters.ContainerFolder}}/Resources_${{parameters.resourcegroup}}.csv'
-      
-#       $storageContext = New-AzStorageContext -StorageAccountName $(storageAccountName) -StorageAccountKey $(storageAccountAccessKey)
-#       $blob = Set-AzStorageBlobContent -Context $storageContext -Container $(storageContainerName) -File $sourceFilePath -Blob $destinationBlobName -Force
-
-#     azurePowerShellVersion: LatestVersion
-
 - task: AzurePowerShell@5
   displayName: 'Upload Inventory to Azure Blob Storage'
   inputs:
